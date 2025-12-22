@@ -21,6 +21,7 @@
 
     <modules>
         <module>VIPTickets</module>
+        <module>Prohibition</module>
     </modules>
 
     <repositories>
