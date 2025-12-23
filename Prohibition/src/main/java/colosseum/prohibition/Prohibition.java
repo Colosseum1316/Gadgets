@@ -39,8 +39,8 @@ public final class Prohibition extends JavaPlugin {
 
         CommandMap commandMap = CommandUtils.getCommandMap();
         for (AbstractDefinition provider : serviceLoader) {
-            PluginCommand command = CommandUtils.getPluginCommand(provider.getName());
             String alias = "prohibition-" + provider.getName();
+            PluginCommand command = CommandUtils.getPluginCommand(alias);
             command.setAliases(Collections.singletonList(alias));
             command.setDescription(provider.getName());
             command.setUsage("/" + alias);
