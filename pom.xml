@@ -20,8 +20,9 @@
     </properties>
 
     <modules>
-        <module>VIPTickets</module>
         <module>Prohibition</module>
+        <module>VIPTickets</module>
+        <module>VoidDummy</module>
     </modules>
 
     <repositories>

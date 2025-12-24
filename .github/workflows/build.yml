@@ -12,6 +12,8 @@ on:
       - "VIPTickets/src/main/java/**/*.java"
       - "VIPTickets/src/main/resources/config.yml"
       - "VIPTickets/src/main/resources/plugin.yml"
+      - "VoidDummy/src/main/java/**/*.java"
+      - "VoidDummy/src/main/resources/plugin.yml"
       - "**/pom.xml"
       - "!.gitignore"
       - "!COPYING"
@@ -26,6 +28,8 @@ on:
       - "VIPTickets/src/main/java/**/*.java"
       - "VIPTickets/src/main/resources/config.yml"
       - "VIPTickets/src/main/resources/plugin.yml"
+      - "VoidDummy/src/main/java/**/*.java"
+      - "VoidDummy/src/main/resources/plugin.yml"
       - "**/pom.xml"
       - "!.gitignore"
       - "!COPYING"
@@ -72,5 +76,6 @@ jobs:
           path: |
             Prohibition/target/*.jar
             VIPTickets/target/*.jar
+            VoidDummy/target/*.jar
           retention-days: 1
           overwrite: true
