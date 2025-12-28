@@ -2,3 +2,7 @@ name: ${project.name}
 main: colosseum.voiddummy.VoidDummy
 version: ${project.version}
 load: STARTUP
+
+commands:
+  voiddummy:
+    usage: /voiddummy
