@@ -20,6 +20,7 @@
     </properties>
 
     <modules>
+        <module>LegacyBossBar</module>
         <module>Prohibition</module>
         <module>VIPTickets</module>
         <module>VoidDummy</module>
