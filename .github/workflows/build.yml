@@ -5,6 +5,8 @@ on:
     branches:
       - "master"
     paths:
+      - "LegacyBossBar/src/main/java/**/*.java"
+      - "LegacyBossBar/src/main/resources/plugin.yml"
       - "Prohibition/src/main/java/**/*.java"
       - "Prohibition/src/main/resources/config.yml"
       - "Prohibition/src/main/resources/plugin.yml"
@@ -21,6 +23,8 @@ on:
     branches:
       - "master"
     paths:
+      - "LegacyBossBar/src/main/java/**/*.java"
+      - "LegacyBossBar/src/main/resources/plugin.yml"
       - "Prohibition/src/main/java/**/*.java"
       - "Prohibition/src/main/resources/config.yml"
       - "Prohibition/src/main/resources/plugin.yml"
@@ -74,6 +78,7 @@ jobs:
         with:
           name: Gadgets-${{ github.run_id }}-${{ matrix.os }}-java-${{ matrix.java-version }}
           path: |
+            LegacyBossBar/target/*.jar
             Prohibition/target/*.jar
             VIPTickets/target/*.jar
             VoidDummy/target/*.jar
