@@ -1,3 +1,7 @@
 name: LegacyBossBar
 main: colosseum.legacybossbar.LegacyBossBar
 version: ${project.version}
+
+commands:
+  legacybossbar:
+    usage: /legacybossbar <offset>

@@ -1,5 +1,6 @@
 package colosseum.legacybossbar;
 
+import lombok.Setter;
 import net.minecraft.server.v1_8_R3.EntityWither;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
@@ -27,6 +28,9 @@ public final class WitherManager implements Listener {
     private final Map<UUID, Integer> activeWithers = new HashMap<>();
     private BukkitTask withersTeleportTask;
 
+    @Setter
+    private int offset = -3;
+
     public void activate() {
         Bukkit.getPluginManager().registerEvents(this, LegacyBossBar.getInstance());
         withersTeleportTask = Bukkit.getScheduler().runTaskTimer(LegacyBossBar.getInstance(), () -> {
@@ -35,7 +39,7 @@ public final class WitherManager implements Listener {
                 if (eid == -1) {
                     continue;
                 }
-                Location loc = player.getLocation().add(0, -30, 0);
+                Location loc = player.getLocation().add(0, offset, 0);
                 PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(eid, (int) (loc.getX() * 32), (int) (loc.getY() * 32.0), (int) (loc.getZ() * 32.0), (byte) 0, (byte) 0, false);
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
@@ -94,7 +98,7 @@ public final class WitherManager implements Listener {
         wither.getDataWatcher().watch(19, 0);
         wither.getDataWatcher().watch(20, 0);
         Location loc = player.getLocation();
-        wither.setLocation(loc.getX(), loc.getY() - 30, loc.getZ(), loc.getYaw(), loc.getPitch());
+        wither.setLocation(loc.getX(), loc.getY() + offset, loc.getZ(), loc.getYaw(), loc.getPitch());
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving(wither);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         activeWithers.put(player.getUniqueId(), wither.getId());

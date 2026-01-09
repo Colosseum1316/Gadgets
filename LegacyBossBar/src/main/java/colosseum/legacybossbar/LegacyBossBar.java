@@ -1,15 +1,14 @@
 package colosseum.legacybossbar;
 
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LegacyBossBar extends JavaPlugin {
 
+    @Getter
     private static LegacyBossBar instance;
 
-    public static JavaPlugin getInstance() {
-        return instance;
-    }
-
+    @Getter
     private WitherManager witherManager;
 
     @Override
@@ -21,6 +20,7 @@ public final class LegacyBossBar extends JavaPlugin {
     public void onEnable() {
         witherManager = new WitherManager();
         witherManager.activate();
+        getCommand("legacybossbar").setExecutor(new LegacyBossBarCommand());
     }
 
     @Override
