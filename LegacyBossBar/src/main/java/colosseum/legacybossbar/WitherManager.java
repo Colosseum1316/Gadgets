@@ -91,7 +91,9 @@ public final class WitherManager implements Listener {
         wither.setInvisible(true);
         wither.setCustomName(player.getName());
         wither.setCustomNameVisible(true);
-        wither.getDataWatcher().watch(8, (byte) 0);
+        // https://minecraft.wiki/w/Entity_metadata?oldid=2767708#Living_Entity
+        wither.getDataWatcher().watch(0, (byte) (1 << 5));
+        wither.getDataWatcher().watch(4, (byte) 1);
         wither.getDataWatcher().watch(15, (byte) 1);
         wither.getDataWatcher().watch(17, 0);
         wither.getDataWatcher().watch(18, 0);
