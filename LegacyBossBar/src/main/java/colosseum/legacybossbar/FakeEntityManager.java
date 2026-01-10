@@ -1,7 +1,7 @@
 package colosseum.legacybossbar;
 
 import lombok.Setter;
-import net.minecraft.server.v1_8_R3.EntityWither;
+import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
@@ -24,22 +24,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public final class WitherManager implements Listener {
-    private final Map<UUID, Integer> activeWithers = new HashMap<>();
-    private BukkitTask withersTeleportTask;
-
-    @Setter
-    private int offset = -3;
+public final class FakeEntityManager implements Listener {
+    private final Map<UUID, Integer> activeEntities = new HashMap<>();
+    private BukkitTask fakeEntitiesTeleportTask;
 
     public void activate() {
         Bukkit.getPluginManager().registerEvents(this, LegacyBossBar.getInstance());
-        withersTeleportTask = Bukkit.getScheduler().runTaskTimer(LegacyBossBar.getInstance(), () -> {
+        fakeEntitiesTeleportTask = Bukkit.getScheduler().runTaskTimer(LegacyBossBar.getInstance(), () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                int eid = activeWithers.getOrDefault(player.getUniqueId(), -1);
+                int eid = activeEntities.getOrDefault(player.getUniqueId(), -1);
                 if (eid == -1) {
                     continue;
                 }
-                Location loc = player.getLocation().add(0, offset, 0);
+                Location loc = player.getLocation();
+                loc.setY(-200);
                 PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(eid, (int) (loc.getX() * 32), (int) (loc.getY() * 32.0), (int) (loc.getZ() * 32.0), (byte) 0, (byte) 0, false);
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
@@ -47,8 +45,8 @@ public final class WitherManager implements Listener {
     }
 
     public void deactivate() {
-        withersTeleportTask.cancel();
-        activeWithers.clear();
+        fakeEntitiesTeleportTask.cancel();
+        activeEntities.clear();
         HandlerList.unregisterAll(this);
     }
 
@@ -57,57 +55,50 @@ public final class WitherManager implements Listener {
         if (e.getPlayer().isDead()) {
             return;
         }
-        spawnWither(e.getPlayer());
+        spawnEntity(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent e) {
-        despawnWither(e.getPlayer());
+        despawnEntity(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerChangedWorldEvent e) {
-        despawnWither(e.getPlayer());
-        spawnWither(e.getPlayer());
+        despawnEntity(e.getPlayer());
+        spawnEntity(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
-        despawnWither(player);
+        despawnEntity(player);
         Bukkit.getScheduler().runTaskLater(LegacyBossBar.getInstance(), () -> {
             if (player.isOnline()) {
-                spawnWither(player);
+                spawnEntity(player);
             }
         }, 20L);
     }
 
-    private void spawnWither(Player player) {
-        if (activeWithers.containsKey(player.getUniqueId())) {
+    private void spawnEntity(Player player) {
+        if (activeEntities.containsKey(player.getUniqueId())) {
             return;
         }
-        final EntityWither wither = new EntityWither(((CraftWorld) player.getWorld()).getHandle());
-        wither.setGoalTarget(null);
-        wither.setInvisible(true);
-        wither.setCustomName(player.getName());
-        wither.setCustomNameVisible(true);
-        // https://minecraft.wiki/w/Entity_metadata?oldid=2767708#Living_Entity
-        wither.getDataWatcher().watch(0, (byte) (1 << 5));
-        wither.getDataWatcher().watch(4, (byte) 1);
-        wither.getDataWatcher().watch(15, (byte) 1);
-        wither.getDataWatcher().watch(17, 0);
-        wither.getDataWatcher().watch(18, 0);
-        wither.getDataWatcher().watch(19, 0);
-        wither.getDataWatcher().watch(20, 0);
+        final EntityEnderDragon dragon = new EntityEnderDragon(((CraftWorld) player.getWorld()).getHandle());
+        dragon.setCustomName(player.getName());
+        dragon.setCustomNameVisible(false);
+        dragon.setGoalTarget(null);
+        dragon.setInvisible(true);
+        dragon.getDataWatcher().watch(4, (byte) 1);
         Location loc = player.getLocation();
-        wither.setLocation(loc.getX(), loc.getY() + offset, loc.getZ(), loc.getYaw(), loc.getPitch());
-        PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving(wither);
+        dragon.setLocation(loc.getX(), 0, loc.getZ(), 0, 0);
+        PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving(dragon);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-        activeWithers.put(player.getUniqueId(), wither.getId());
+        activeEntities.put(player.getUniqueId(), dragon.getId());
     }
 
-    private void despawnWither(Player player) {
-        Integer id = activeWithers.remove(player.getUniqueId());
+    private void despawnEntity(Player player) {
+        Integer id = activeEntities.remove(player.getUniqueId());
         if (id == null || id == -1) {
             return;
         }

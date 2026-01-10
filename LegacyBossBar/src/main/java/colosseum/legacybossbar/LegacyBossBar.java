@@ -9,7 +9,7 @@ public final class LegacyBossBar extends JavaPlugin {
     private static LegacyBossBar instance;
 
     @Getter
-    private WitherManager witherManager;
+    private FakeEntityManager fakeEntityManager;
 
     @Override
     public void onLoad() {
@@ -18,16 +18,15 @@ public final class LegacyBossBar extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        witherManager = new WitherManager();
-        witherManager.activate();
-        getCommand("legacybossbar").setExecutor(new LegacyBossBarCommand());
+        fakeEntityManager = new FakeEntityManager();
+        fakeEntityManager.activate();
     }
 
     @Override
     public void onDisable() {
-        if (witherManager != null) {
-            witherManager.deactivate();
+        if (fakeEntityManager != null) {
+            fakeEntityManager.deactivate();
         }
-        witherManager = null;
+        fakeEntityManager = null;
     }
 }
