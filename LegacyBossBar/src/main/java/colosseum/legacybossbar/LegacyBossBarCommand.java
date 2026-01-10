@@ -15,9 +15,13 @@ public final class LegacyBossBarCommand implements CommandExecutor {
         if (args.length != 1) {
             return false;
         }
-        int n = Integer.parseInt(args[0]);
-        LegacyBossBar.getInstance().getWitherManager().setOffset(n);
-        sender.sendMessage("Set new offset " + n);
+        try {
+            int n = Integer.parseInt(args[0]);
+            LegacyBossBar.getInstance().getWitherManager().setOffset(n);
+            sender.sendMessage("Set new offset " + n);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         return true;
     }
 }
